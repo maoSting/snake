@@ -1,0 +1,29 @@
+{
+    "name": "dingq/snake",
+    "type": "library",
+    "description": "运行在swoole下的一个极简的php http框架，",
+    "keywords": [
+        "swoole",
+        "library",
+        "async",
+        "snake"
+    ],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "dingq",
+            "email": "237661791@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Snake\\": "src/"
+        }
+    },
+    "require-dev": {
+        "eaglewu/swoole-ide-helper": "dev-master"
+    }
+}
