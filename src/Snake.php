@@ -22,5 +22,12 @@ class Snake {
         }
     }
 
+    public static function startServer($conf){
+        switch ($conf['server_type']) {
+            case 1:
+                new \Swoole\Http\Server();
+        }
+    }
+
 
 }
