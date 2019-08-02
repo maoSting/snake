@@ -45,6 +45,7 @@ if (!function_exists('config_import')) {
 if (!function_exists('config_get')) {
     /**
      * 获取配置
+     *
      * @param string $key 支持.语法
      * @param string $default
      *
@@ -53,7 +54,7 @@ if (!function_exists('config_get')) {
      */
     function config_get($key = '', $default = "") {
         global $_snake_config;
-        if (strpos($key, '.') !== false) {
+        if (strpos($key, '.') === false) {
             return isset($_snake_config[ $key ]) ? $_snake_config[ $key ] : $default;
         }
         $rst   = explode('.', $key);
@@ -69,3 +70,55 @@ if (!function_exists('config_get')) {
         return $array;
     }
 }
+
+if (!function_exists('array_get_value_by_key')) {
+    /**
+     * 获取配置
+     *
+     * @param string $key 支持.语法
+     * @param string $default
+     *
+     * @return null|string
+     * Author: DQ
+     */
+    function array_get_value_by_key($array, $key, $default = null) {
+        if (strpos($key, '.') === false) {
+            return isset($array[ $key ]) ? $array[ $key ] : $default;
+        }
+        $rst = explode('.', $key);
+        foreach ($rst as $val) {
+            if (isset($array[ $val ])) {
+                $array = $array[ $val ];
+            } else {
+                $array = $default;
+            }
+        }
+
+        return $array;
+    }
+}
+
+if (!function_exists('array_get_value_by_keys')) {
+    /**
+     *
+     * @param       $array
+     * @param array $keys
+     *                   一维数组
+     * @param null  $default
+     *
+     * @return mixed
+     * Author: DQ
+     */
+    function array_get_value_by_keys($array, $keys = [], $default = null) {
+        foreach ($keys as $key) {
+            $tmp = array_get_value_by_key($array, $key);
+            if($tmp !== null){
+                return $tmp;
+            }
+        }
+        return null;
+    }
+}
+
+
+
