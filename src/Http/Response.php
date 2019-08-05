@@ -85,7 +85,8 @@ class Response {
 
     }
 
-    public function getHttpRequest() {
+    public function getHttpRequest() : Request
+    {
         return $this->httpRequest;
     }
 

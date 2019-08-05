@@ -30,6 +30,10 @@ class Request {
         $this->request = &$_REQUEST;
     }
 
+    public function cookie($key = null, $default = null){
+        return array_get_value_by_key($this->cookie, $key, $default);
+    }
+
     public function ip() {
         return array_get_value_by_keys($this->server, ['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR']);
     }
