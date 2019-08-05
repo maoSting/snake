@@ -16,6 +16,9 @@ trait HttpEvent {
     }
 
     protected function httpRouter(\Swoole\Http\Request $request, \Swoole\Http\Response $response){
+        
+
+
 
     }
 }

@@ -14,6 +14,19 @@ class Router {
     private static $group_info = [];
     private static $max_group_depth = 200;
 
+
+
+
+
+
+    public static function group($rule, $callback){
+        $len = self::$max_group_depth - count(self::$group_info);
+        self::$group_info[$len] = $rule;
+        ksort(self::$group_info);
+        $callback();
+        unset(self::$group_info[$len]);
+    }
+
     private static function withGroupAction($group_info, $action){
         if (is_array($action)) {
             if (isset($group_info['as']) && isset($action['as']) ){
