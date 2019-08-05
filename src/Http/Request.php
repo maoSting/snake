@@ -46,4 +46,16 @@ class Request {
         return array_get_value_by_key($this->post, $key, $default);
     }
 
+    public function files() {
+        return $this->files;
+    }
+
+    public function isJson() {
+        if($this->server('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' || strpos($this->server('HTTP_ACCEPT'), '/json') !== false){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }
