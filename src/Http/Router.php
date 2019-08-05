@@ -96,4 +96,32 @@ class Router {
     public static function get($path, $action) {
         self::set('get', $path, $action);
     }
+
+    public static function post($path, $action){
+        self::set('post', $path, $action);
+    }
+
+    public static function put($path, $action){
+        self::set('put', $path, $action);
+    }
+
+    public static function delete($path, $action){
+        self::set('delete', $path, $action);
+    }
+
+    public static function patch($path, $action){
+        self::set('patch', $path, $action);
+    }
+
+    public static function any($path, $action){
+        self::get($path, $action);
+        self::post($path, $action);
+        self::put($path, $action);
+        self::delete($path, $action);
+        self::patch($path, $action);
+    }
+
+
+
+
 }
