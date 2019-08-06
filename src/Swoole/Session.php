@@ -55,7 +55,7 @@ class Session {
         if($response){
             $response->cookie($this->name, $this->session_id, $this->time+ time(), '/');
         }
-        $this->data = unserialize($this->drive->get($this->name.$this->session_id))
+        $this->data = unserialize($this->drive->get($this->prefix.$this->session_id));
     }
 
     public function getSessionId(){

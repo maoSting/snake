@@ -8,6 +8,10 @@
 
 namespace Snake\Swoole\Event;
 
+use Snake\Http\Router;
+use Snake\Snake;
+use Swoole\Server;
+
 trait HttpEvent {
 
     public function onRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response)
@@ -16,8 +20,17 @@ trait HttpEvent {
     }
 
     protected function httpRouter(\Swoole\Http\Request $request, \Swoole\Http\Response $response){
-        
+        $req = new \Snake\Swoole\Request($request);
+        $requestId = $req->requestId();
+        $res = new \Snake\Swoole\Response($request, $response);
+        try{
+            $route = new Router();
+            $server = $this->ser
+        }catch (\HttpException $e){
 
+        }catch (\Throwable $exception){
+
+        }
 
 
     }
