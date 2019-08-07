@@ -26,6 +26,11 @@ trait HttpEvent {
             $route = new Router();
             $server = $this instanceof Server ? $this : $this->server;
 
+            $req->method();
+            $req->uri();
+
+
+
 
 
         }catch (\HttpException $e){

@@ -30,7 +30,7 @@ class Request {
         $this->request = &$_REQUEST;
     }
 
-    public function cookie($key = null, $default = null){
+    public function cookie($key = null, $default = null) {
         return array_get_value_by_key($this->cookie, $key, $default);
     }
 
@@ -50,14 +50,29 @@ class Request {
         return array_get_value_by_key($this->post, $key, $default);
     }
 
+    public function uri() {
+        $path = urldecode(array_get_value_by_keys($this->server, ['REQUEST_URI', 'argv.1']));
+        $paths = explode('?', $path);
+        if(empty($paths)){
+            return '/';
+        }else{
+            return '/'.trim($paths[0], '/');
+        }
+    }
+
     public function files() {
         return $this->files;
     }
 
+
+    public function method(){
+        return strtolower($this->server('REQUEST_METHOD'));
+    }
+
     public function isJson() {
-        if($this->server('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' || strpos($this->server('HTTP_ACCEPT'), '/json') !== false){
+        if ($this->server('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' || strpos($this->server('HTTP_ACCEPT'), '/json') !== false) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
