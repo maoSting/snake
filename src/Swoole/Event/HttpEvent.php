@@ -9,8 +9,7 @@
 namespace Snake\Swoole\Event;
 
 use Snake\Http\Router;
-use Snake\Snake;
-use Swoole\Server;
+use Snake\Swoole\Server;
 
 trait HttpEvent {
 
@@ -25,7 +24,10 @@ trait HttpEvent {
         $res = new \Snake\Swoole\Response($request, $response);
         try{
             $route = new Router();
-            $server = $this->ser
+            $server = $this instanceof Server ? $this : $this->server;
+
+
+
         }catch (\HttpException $e){
 
         }catch (\Throwable $exception){
