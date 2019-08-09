@@ -8,19 +8,83 @@
 
 namespace Snake\Http;
 
+use Snake\Cache\Cache;
+use Snake\Exceptions\RouteException;
+
 class Router {
 
+    private        $args            = [];
     private static $info            = [];
     private static $as_info         = [];
     private static $group_info      = [];
     private static $max_group_depth = 200;
 
-    public function getAction($method, $uri){
+    public function getAction($method, $uri) {
+        $info = $this->matchRouter($this->getKey($method, $uri));
+        if (!$info) {
+            throw new RouteException('Not Found', 404);
+        }
+        if (is_array($info)) {
+            if (isset($info[0])) {
+                $info = $info[0];
+            } else {
+                throw new RouteException('Not Found');
+            }
+        }
+        $fm = [];
 
+        if (is_array($info)) {
+            $fm[] = $info;
+            if (isset($info['middle'])) {
+                foreach ($info['middle'] as $v) {
+                    $fm[] = $v;
+                }
+            }
+        } else {
+            $fm[] = $info;
+        }
+
+        return $fm;
     }
 
-    public function explain($method, $uri, ...$args) {
+    public function explain($method, $uri, ...$other_args) {
         $info = $this->getAction($method, $uri);
+        $str  = is_array($info[0]) ? $info[0]['use'] : $info[0];
+        list($class, $fun) = explode('@', $str);
+
+        $funs = [];
+        foreach ($info as $i => $v) {
+            if ($i > 0) {
+                $funs = function ($handler, ...$args) use ($v) {
+                    return function () use ($v, $handler, $args) {
+                        array_unshift($args, $handler);
+
+                        return call($v, $args);
+                    };
+                };
+            }
+        }
+        $action = function () use ($info, $class, $fun, $other_args) {
+            $cache = 0;
+            if (is_array($info[0]) && isset($info[0]['cache'])) {
+                $cache = $info[0]['cache'];
+                $key = md5($class.'@'.$fun.':'.implode(',', $this->args));
+                $res = Cache::get($key);
+                if ($res){
+                    return $res;
+                }
+            }
+            $obj = new $class(...$other_args);
+            if (!method_exists($obj, $fun)){
+                throw new RouteException('method not exists',2);
+            }
+            $res = $obj->$fun(...$this->args);
+            if ($cache){
+                Cache::set($key, $res, $cache);
+            }
+            return $res;
+        };
+        return [$class, $fun, $funs, $action, $this->args];
     }
 
     public static function group($rule, $callback) {
@@ -140,9 +204,88 @@ class Router {
         self::patch($path, $action);
     }
 
+    private function getKey($method, $uri) {
+        $paths = explode('/', $uri);
+        foreach ($paths as $i => $v) {
+            if (is_numeric($v)) {
+                $paths[ $i ] = '#' . $v;
+            }
+        }
+        $path = implode('.', $paths);
+        if ($path === '' || $path === '.') {
+            $path = '';
+        }
+        $path = trim($path, '.');
 
-    private function matchRouter($key){
+        return $method . '.' . $path;
+    }
 
+    /**
+     *
+     * @param $key
+     *            method . uri
+     *
+     * @return mixed
+     * Author: DQ
+     */
+    private function matchRouter($key) {
+        $array = self::$info;
+        if (strpos($key, '.') !== false) {
+            $keys = explode('.', $key);
+            foreach ($keys as $j => $v) {
+                $array = $this->rules($array, $v);
+                if ($array === null) {
+                    return null;
+                }
+                if (is_string($array) || (count($array) == 1 && isset($array[0]))) {
+                    break;
+                }
+            }
+            $af         = array_slice($keys, $j + 1);
+            $af         = array_map(function ($r) {
+                return ltrim($r, '#');
+            }, $af);
+            $this->args = array_merge($this->args, $af);
+
+            return $array;
+        } else {
+            return $this->rules($array, $key);
+        }
+    }
+
+    private function rules($array, $v) {
+        if (isset($array[ $v ])) {
+            return $array[ $v ];
+        }
+        $keys = array_keys($array);
+        foreach ($keys as $key) {
+            $tmp = substr($key, 0, 1);
+            if ($tmp == '{') {
+                $_k = substr($key, 1, -1);
+                if (substr($v, 0, 1) == '#') {
+                    $v = substr($v, 1);
+                }
+                if ($_k == 'id') {
+                    if (is_numeric($v)) {
+                        $this->args[] = $v;
+
+                        return $array[ $key ];
+                    }
+                } else {
+                    $this->args[] = $v;
+
+                    return $array[ $key ];
+                }
+            } else if ($tmp == '`') {
+                if (preg_match('/' . substr($key, 1, -1) . '/', $v)) {
+                    $this->args[] = $v;
+
+                    return $array[ $key ];
+                }
+            }
+        }
+
+        return null;
     }
 
 }

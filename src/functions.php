@@ -112,11 +112,24 @@ if (!function_exists('array_get_value_by_keys')) {
     function array_get_value_by_keys($array, $keys = [], $default = null) {
         foreach ($keys as $key) {
             $tmp = array_get_value_by_key($array, $key);
-            if($tmp !== null){
+            if ($tmp !== null) {
                 return $tmp;
             }
         }
+
         return null;
+    }
+}
+
+if (!function_exists('call')) {
+    function call($function, $args) {
+        if (strpos($function, '@' !== false)) {
+            $ctr = explode('@', $function);
+
+            return call_user_func_array([new $ctr[0], $ctr[1]], $args);
+        } else {
+            return call_user_func_array($function, $args);
+        }
     }
 }
 
