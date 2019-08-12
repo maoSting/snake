@@ -87,6 +87,14 @@ class Router {
         return [$class, $fun, $funs, $action, $this->args];
     }
 
+
+    public function getExecAction($mids, $action, ...$args){
+        foreach ($mids as $fn){
+            $action = $fn($action, ...$args);
+        }
+        return $action;
+    }
+
     public static function group($rule, $callback) {
         $len                      = self::$max_group_depth - count(self::$group_info);
         self::$group_info[ $len ] = $rule;

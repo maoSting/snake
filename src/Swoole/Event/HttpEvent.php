@@ -26,19 +26,17 @@ trait HttpEvent {
             $route = new Router();
             $server = $this instanceof Server ? $this : $this->server;
 
-            $req->method();
-            $req->uri();
-
-
-
-
-
-        }catch (\HttpException $e){
-
+            list($req->class, $req->method, $mids, $action, $req->args) = $route->explain($req->method(), $req->uri(), $req, $res, $server);
+            $f = $route->getExecAction($mids, $action, $res, $server);
+            $data = $f();
+        }catch (\Snake\Exceptions\HttpException $e){
+            $data = '\Snake\Exceptions\HttpException error';
         }catch (\Throwable $exception){
 
         }
-
-
+        $response->exist = $this->server->exist($request->fd);
+        if ($data && $response->exist){
+            $response->write($data);
+        }
     }
 }
