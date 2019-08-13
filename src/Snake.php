@@ -18,7 +18,7 @@ class Snake {
     public static function run() {
         if (self::$_server === null) {
             list($swoole, $server) = self::startServer(self::$_config['server']);
-            @swoole_set_process_name('snake_master_' . sha1(serialize(self::$_config)))
+            @swoole_set_process_name('snake_master_' . sha1(serialize(self::$_config)));
             $server->start();
         }
     }
