@@ -1,7 +1,7 @@
 {
     "name": "dingq/snake",
     "type": "library",
-    "description": "运行在swoole下的一个极简的php http框架，",
+    "description": "运行在swoole下的一个极简的框架，",
     "keywords": [
         "swoole",
         "library",
