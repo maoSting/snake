@@ -8,9 +8,12 @@
 
 namespace Snake\Swoole;
 
+use Snake\Component\Config;
 use Swoole\Process;
 
 class Server {
+
+    use Config;
 
     const SWOOLE_SERVER = 0;
     const SWOOLE_HTTP_SERVER = 1;
