@@ -10,8 +10,9 @@ namespace Snake\Swoole\Server;
 
 
 use Snake\Swoole\Event\HttpEvent;
+use Snake\Swoole\Server;
 
-class HttpServer {
+class HttpServer extends Server {
 
     use HttpEvent;
 }
