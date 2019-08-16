@@ -1,11 +1,6 @@
 <?php
 static $_snake_config = null;
-/**
- * Created by PhpStorm.
- * Author: DQ
- * Date: 2019/7/31
- * Time: 15:25
- */
+
 /**
  * 导入配置文件名称
  *
