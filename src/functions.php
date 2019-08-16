@@ -10,20 +10,23 @@ static $_snake_config = null;
  * @return string
  * Author: DQ
  */
-function import($path = ''){
+function import($path = '') {
     global $_snake_config;
-    if(is_file($path)){
+    if (isset($_snake_config[ $path ])) {
+        return $_snake_config[ $path ];
+    }
+    if (!is_file($path)) {
         return null;
     }
     $filename = basename($path);
-    $tmp = explode('.', $filename);
-    $key = $tmp[0];
-    if(!isset($_snake_config[$key])){
-        $_snake_config[$key] = require($path);
+    $tmp      = explode('.', $filename);
+    $key      = $tmp[0];
+    if (!isset($_snake_config[ $key ])) {
+        $_snake_config[ $key ] = require($path);
     }
-    return $_snake_config[$key];
-}
 
+    return $_snake_config[ $key ];
+}
 
 /**
  *
@@ -57,7 +60,6 @@ function config_import($path) {
     return true;
 }
 
-
 /**
  * 获取配置
  *
@@ -85,7 +87,6 @@ function config_get($key = '', $default = "") {
     return $array;
 }
 
-
 /**
  * 获取配置
  *
@@ -111,7 +112,6 @@ function array_get_value_by_key($array, $key, $default = null) {
     return $array;
 }
 
-
 /**
  *
  * @param       $array
@@ -132,8 +132,6 @@ function array_get_value_by_keys($array, $keys = [], $default = null) {
 
     return null;
 }
-
-
 
 function call($function, $args) {
     if (strpos($function, '@' !== false)) {
