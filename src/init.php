@@ -5,7 +5,7 @@
  * Date: 2019/8/16
  * Time: 15:01
  */
-if (defined('APP_PATH')) {
+if (!defined('APP_PATH')) {
     exit('undefined APP_PATH exist');
 }
 if (!defined('DEBUG')) {
