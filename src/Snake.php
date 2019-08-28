@@ -35,7 +35,7 @@ class Snake {
                 $server = new \Swoole\Server($conf['ip'], $conf['port']);
                 break;
             case self::SWOOLE_HTTP_SERVER:
-                $server = new \Swoole\Http\Server($conf['ip'], $conf['port']);
+                $server = new \Swoole\Http\Server($conf['ip'], $conf['port'], $conf['mode'], $conf['socket_type']);
                 break;
             case self::SWOOLE_WEBSOCKET_SERVER:
                 $server = new \Swoole\WebSocket\Server($conf['ip'], $conf['port']);
