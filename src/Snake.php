@@ -46,7 +46,8 @@ class Snake {
         if (isset($conf['set'])) {
             $server->set($conf['set']);
         }
-        $obj = self::onEvent($server, $conf['event'], $conf);
+        $call = ['workerstart' => 'onWorkerStart', 'managerstart' => 'onManagerStart'];
+        $obj = self::onEvent($server, $conf['event'], $conf, $call);
 
         return [$server, $obj];
     }
