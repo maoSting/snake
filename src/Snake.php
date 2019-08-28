@@ -13,6 +13,11 @@ use Snake\Component\Config;
 class Snake {
     use Config;
 
+    const SWOOLE_SERVER = 0;
+    const SWOOLE_HTTP_SERVER = 1;
+    const SWOOLE_WEBSOCKET_SERVER = 2;
+
+
     private static $_server = null;
 
     public static function run() {
@@ -26,9 +31,14 @@ class Snake {
     public static function startServer($conf) {
         $server = null;
         switch ($conf['server_type']) {
-            case 1:
+            case self::SWOOLE_HTTP_SERVER:
+                $server = new \Swoole\Server($conf['ip'], $conf['port']);
+                break;
+            case self::SWOOLE_HTTP_SERVER:
                 $server = new \Swoole\Http\Server($conf['ip'], $conf['port']);
                 break;
+            case self::SWOOLE_WEBSOCKET_SERVER:
+                $server = new \Swoole\WebSocket\Server($conf['ip'], $conf['port']);
             default:
                 echo '未知服务' . PHP_EOL;
                 exit();

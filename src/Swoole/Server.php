@@ -15,9 +15,7 @@ class Server {
 
     use Config;
 
-    const SWOOLE_SERVER = 0;
-    const SWOOLE_HTTP_SERVER = 1;
-    const SWOOLE_WEBSOCKET_SERVER = 2;
+
 
 
     protected $conf = [];
