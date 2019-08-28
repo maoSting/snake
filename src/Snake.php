@@ -31,7 +31,7 @@ class Snake {
     public static function startServer($conf) {
         $server = null;
         switch ($conf['server_type']) {
-            case self::SWOOLE_HTTP_SERVER:
+            case self::SWOOLE_SERVER:
                 $server = new \Swoole\Server($conf['ip'], $conf['port']);
                 break;
             case self::SWOOLE_HTTP_SERVER:
@@ -56,7 +56,7 @@ class Snake {
         $methods = $rfl->getMethods(\ReflectionMethod::IS_PUBLIC);
         $obj     = new $class($server, $conf);
         foreach ($methods as $function) {
-            if (strpos($function->class, 'Snake\\Swoole\\' === false)) {
+            if (strpos($function->class, 'Snake\\Swoole\\') === false) {
                 if (substr($function->name, 0, 2) == 'on') {
                     $call[ strtolower(substr($function->name, 2)) ] = $function->name;
                 }
