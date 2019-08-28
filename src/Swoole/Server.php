@@ -51,7 +51,7 @@ class Server {
 
     }
 
-    public function onWorkStart(\Swoole\Server $server, $worker_id) {
+    public function onWorkerStart(\Swoole\Server $server, $worker_id) {
         $this->is_task   = $server->taskworker;
         $this->worker_id = $worker_id;
         $this->pid       = $server->worker_pid;
